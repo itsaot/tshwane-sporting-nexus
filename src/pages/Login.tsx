@@ -9,6 +9,10 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
+// Test credentials
+// Admin: admin@tsfc.co.za / admin123
+// Regular user: user@tsfc.co.za / user123
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

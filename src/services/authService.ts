@@ -22,7 +22,54 @@ export interface AuthResponse {
   }
 }
 
+// Mock admin credentials for development/testing
+const MOCK_USERS = {
+  'admin@tsfc.co.za': {
+    id: 'admin-001',
+    name: 'Admin User',
+    email: 'admin@tsfc.co.za',
+    password: 'admin123',
+    role: 'admin'
+  },
+  'user@tsfc.co.za': {
+    id: 'user-001',
+    name: 'Regular User',
+    email: 'user@tsfc.co.za',
+    password: 'user123',
+    role: 'user'
+  }
+};
+
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
+  // For development purposes, check against mock users first
+  // In production, this would be replaced with the actual API call
+  if (import.meta.env.DEV) {
+    const mockUser = MOCK_USERS[credentials.email as keyof typeof MOCK_USERS];
+    
+    if (mockUser && mockUser.password === credentials.password) {
+      // Create a mock token (in production this would come from the backend)
+      const mockResponse: AuthResponse = {
+        token: `mock-token-${mockUser.id}-${Date.now()}`,
+        user: {
+          id: mockUser.id,
+          name: mockUser.name,
+          email: mockUser.email,
+          role: mockUser.role
+        }
+      };
+      
+      // Store auth data in localStorage
+      localStorage.setItem('token', mockResponse.token);
+      localStorage.setItem('user', JSON.stringify(mockResponse.user));
+      
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      return mockResponse;
+    }
+  }
+
+  // If not in dev mode or mock user not found/password incorrect, call the API
   const response = await api.post<AuthResponse>('/auth/login', credentials);
   if (response.data.token) {
     localStorage.setItem('token', response.data.token);
