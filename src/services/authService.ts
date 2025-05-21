@@ -29,14 +29,14 @@ const MOCK_USERS = {
     name: 'Admin User',
     email: 'admin@tsfc.co.za',
     password: 'admin123',
-    role: 'admin'
+    role: 'admin' as const
   },
   'user@tsfc.co.za': {
     id: 'user-001',
     name: 'Regular User',
     email: 'user@tsfc.co.za',
     password: 'user123',
-    role: 'user'
+    role: 'user' as const
   }
 };
 
