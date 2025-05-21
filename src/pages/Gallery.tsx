@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 const Gallery: React.FC = () => {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'images' | 'videos'>('all');
+  const [filter, setFilter] = useState<'all' | 'image' | 'video'>('all');
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
 
   useEffect(() => {
@@ -97,11 +97,11 @@ const Gallery: React.FC = () => {
       <div className="club-container py-12">
         <h1 className="text-3xl font-bold text-club-green mb-8 text-center">Gallery</h1>
 
-        <Tabs defaultValue="all" className="mb-8" onValueChange={(value) => setFilter(value as 'all' | 'images' | 'videos')}>
+        <Tabs defaultValue="all" className="mb-8" onValueChange={(value) => setFilter(value as 'all' | 'image' | 'video')}>
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="images">Images</TabsTrigger>
-            <TabsTrigger value="videos">Videos</TabsTrigger>
+            <TabsTrigger value="image">Images</TabsTrigger>
+            <TabsTrigger value="video">Videos</TabsTrigger>
           </TabsList>
         </Tabs>
 
