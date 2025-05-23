@@ -22,8 +22,8 @@ import AddGallery from './pages/admin/AddGallery';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <div className="min-h-screen bg-gray-50">
           <Toaster />
           <Routes>
@@ -63,8 +63,8 @@ function App() {
             
           </Routes>
         </div>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 
