@@ -14,43 +14,20 @@ const Coaches: React.FC = () => {
     const fetchCoaches = async () => {
       try {
         const data = await getCoaches();
-        setCoaches(data);
+        console.log('Fetched coaches data:', data);
+        
+        // Ensure data is always an array
+        if (Array.isArray(data)) {
+          setCoaches(data);
+        } else {
+          console.warn('Coaches data is not an array:', data);
+          setCoaches([]);
+          toast.error('Failed to load coaches data properly.');
+        }
       } catch (error) {
         console.error('Failed to fetch coaches:', error);
         toast.error('Failed to load coaches. Please try again later.');
-        // For demo purposes, let's provide some mock data if API fails
-        setCoaches([
-          {
-            id: '1',
-            name: 'James Peterson',
-            position: 'Head Coach',
-            experience: 15,
-            nationality: 'South Africa',
-            bio: 'Former professional player with extensive coaching experience across multiple leagues.',
-            imageUrl: 'https://images.unsplash.com/photo-1553867745-6e038d085e86?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-            qualifications: ['UEFA Pro License', 'Sports Science Degree']
-          },
-          {
-            id: '2',
-            name: 'Sarah Johnson',
-            position: 'Assistant Coach',
-            experience: 8,
-            nationality: 'South Africa',
-            bio: 'Specializes in player development and tactical analysis.',
-            imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-            qualifications: ['UEFA A License', 'Performance Analysis Certificate']
-          },
-          {
-            id: '3',
-            name: 'Robert Khumalo',
-            position: 'Goalkeeper Coach',
-            experience: 10,
-            nationality: 'South Africa',
-            bio: 'Former national team goalkeeper with specialized training in modern goalkeeping techniques.',
-            imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-            qualifications: ['Goalkeeper Coaching License', 'Sports Psychology Diploma']
-          }
-        ]);
+        setCoaches([]);
       } finally {
         setIsLoading(false);
       }
@@ -70,34 +47,34 @@ const Coaches: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {coaches.map(coach => (
-              <Link to={`/coaches/${coach.id}`} key={coach.id}>
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
-                  <div className="h-64 overflow-hidden">
-                    <img 
-                      src={coach.imageUrl} 
-                      alt={coach.name}
-                      className="w-full h-full object-cover transition-transform hover:scale-105" 
-                    />
-                  </div>
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-xl text-club-green mb-1">{coach.name}</h3>
-                    <p className="text-lg font-medium mb-3">{coach.position}</p>
-                    <div className="flex justify-between text-sm text-gray-600 mb-4">
-                      <p>Experience: {coach.experience} years</p>
-                      <p>{coach.nationality}</p>
+            {coaches.length > 0 ? (
+              coaches.map(coach => (
+                <Link to={`/coaches/${coach.id}`} key={coach.id}>
+                  <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
+                    <div className="h-64 overflow-hidden">
+                      <img 
+                        src={coach.imageUrl} 
+                        alt={coach.name}
+                        className="w-full h-full object-cover transition-transform hover:scale-105" 
+                      />
                     </div>
-                    <p className="text-gray-700 line-clamp-3">{coach.bio}</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        )}
-        
-        {!isLoading && coaches.length === 0 && (
-          <div className="text-center py-10">
-            <p className="text-gray-600">No coaches found.</p>
+                    <CardContent className="p-6">
+                      <h3 className="font-bold text-xl text-club-green mb-1">{coach.name}</h3>
+                      <p className="text-lg font-medium mb-3">{coach.position}</p>
+                      <div className="flex justify-between text-sm text-gray-600 mb-4">
+                        <p>Experience: {coach.experience} years</p>
+                        <p>{coach.nationality}</p>
+                      </div>
+                      <p className="text-gray-700 line-clamp-3">{coach.bio}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10">
+                <p className="text-gray-600">No coaches available at the moment.</p>
+              </div>
+            )}
           </div>
         )}
       </div>
