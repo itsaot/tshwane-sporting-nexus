@@ -12,7 +12,7 @@ const Home: React.FC = () => {
         <div 
           className="absolute inset-0 opacity-50 bg-cover bg-center"
           style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')" 
+            backgroundImage: "url('https://scontent.fjnb1-1.fna.fbcdn.net/v/t39.30808-6/482249655_613168728226378_4619398323679141746_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHxlq7U1xd3djVLE9gfdxVsajqWEcR0lOlqOpYRxHSU6WeSH-cEiAs07i7wB723b8WYzqz1oKoWrywyamrmQJya&_nc_ohc=uw_YWMSwRUUQ7kNvwFe_IJr&_nc_oc=AdlH1yvBBfBDJ37xy-62FmStErbWCpB9Ku99cPjc7_3c3lw3zl7bUUk46jW0_-JTPdU&_nc_zt=23&_nc_ht=scontent.fjnb1-1.fna&_nc_gid=AXMFAr8PeJjeRpzyMAYeMA&oh=00_AfIGcCjuX6_v3m7MAqqxOLrz8kPJvIXExPNrxRKi7l4j6A&oe=683622AF')" 
           }}
         ></div>
         <div className="relative club-container py-20 md:py-32 flex flex-col items-center justify-center text-center">
