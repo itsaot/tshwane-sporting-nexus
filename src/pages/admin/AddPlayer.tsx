@@ -14,6 +14,8 @@ interface PlayerFormData {
   name: string;
   position: string;
   age: number;
+  height: string;
+  weight: string;
   nationality: string;
   jerseyNumber: number;
   stats: {
@@ -94,6 +96,34 @@ const AddPlayer: React.FC = () => {
                       <FormLabel>Age</FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="Enter age" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="height"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Height</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., 6'2\"" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Weight</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., 75kg" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
