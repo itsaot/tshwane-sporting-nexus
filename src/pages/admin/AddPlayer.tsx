@@ -109,7 +109,7 @@ const AddPlayer: React.FC = () => {
                     <FormItem>
                       <FormLabel>Height</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., 6'2\"" {...field} />
+                        <Input placeholder="e.g., 6'2&quot;" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
