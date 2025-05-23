@@ -13,11 +13,14 @@ import Layout from '../../components/layout/Layout';
 interface PlayerFormData {
   name: string;
   position: string;
-  jerseyNumber: number;
   age: number;
-  height: string;
-  weight: string;
   nationality: string;
+  jerseyNumber: number;
+  stats: {
+    goals: number;
+    assists: number;
+    appearances: number;
+  };
   bio: string;
   imageUrl: string;
 }
@@ -28,7 +31,15 @@ const AddPlayer: React.FC = () => {
 
   const onSubmit = async (data: PlayerFormData) => {
     try {
-      await createPlayer(data);
+      const formattedData = {
+        ...data,
+        stats: {
+          goals: data.stats?.goals || 0,
+          assists: data.stats?.assists || 0,
+          appearances: data.stats?.appearances || 0
+        }
+      };
+      await createPlayer(formattedData);
       toast.success('Player added successfully!');
       navigate('/admin');
     } catch (error) {
@@ -68,21 +79,7 @@ const AddPlayer: React.FC = () => {
                     <FormItem>
                       <FormLabel>Position</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Forward, Midfielder" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="jerseyNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Jersey Number</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="Enter jersey number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                        <Input placeholder="e.g., Forward, Midfielder, Defender" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -105,40 +102,26 @@ const AddPlayer: React.FC = () => {
 
                 <FormField
                   control={form.control}
-                  name="height"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Height</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., 5'10\"" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="weight"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Weight</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., 75kg" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
                   name="nationality"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Nationality</FormLabel>
                       <FormControl>
                         <Input placeholder="Enter nationality" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="jerseyNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Jersey Number</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="Enter jersey number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
