@@ -1,57 +1,70 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import './App.css';
+import AuthProvider from './contexts/AuthContext';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Home from './pages/Home';
+import Coaches from './pages/Coaches';
+import Players from './pages/Players';
+import Gallery from './pages/Gallery';
+import Contact from './pages/Contact';
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
+import Unauthorized from './pages/Unauthorized';
+import CoachDetails from './pages/CoachDetails';
+import PlayerDetails from './pages/PlayerDetails';
+import AddPlayer from './pages/admin/AddPlayer';
+import AddCoach from './pages/admin/AddCoach';
+import AddGallery from './pages/admin/AddGallery';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Home from "./pages/Home";
-import Players from "./pages/Players";
-import PlayerDetail from "./pages/PlayerDetail";
-import Coaches from "./pages/Coaches";
-import CoachDetail from "./pages/CoachDetail";
-import Gallery from "./pages/Gallery";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Unauthorized from "./pages/Unauthorized";
-import AdminDashboard from "./pages/AdminDashboard";
-import NotFound from "./pages/NotFound";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          <Toaster />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/players" element={<Players />} />
-            <Route path="/players/:id" element={<PlayerDetail />} />
-            <Route path="/coaches" element={<Coaches />} />
-            <Route path="/coaches/:id" element={<CoachDetail />} />
-            <Route path="/gallery" element={<Gallery />} />
+            {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/coaches" element={<Coaches />} />
+            <Route path="/coaches/:id" element={<CoachDetails />} />
+            <Route path="/players" element={<Players />} />
+            <Route path="/players/:id" element={<PlayerDetails />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route 
-              path="/admin" 
-              element={
-                <ProtectedRoute requireAdmin>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } 
-            />
-            {/* We would add more admin routes here for CRUD operations */}
-            <Route path="*" element={<NotFound />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={
+              <ProtectedRoute requireAdmin>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/players/add" element={
+              <ProtectedRoute requireAdmin>
+                <AddPlayer />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/coaches/add" element={
+              <ProtectedRoute requireAdmin>
+                <AddCoach />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/gallery/add" element={
+              <ProtectedRoute requireAdmin>
+                <AddGallery />
+              </ProtectedRoute>
+            } />
+            
           </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+        </div>
+      </Router>
+    </AuthProvider>
+  );
+}
 
 export default App;

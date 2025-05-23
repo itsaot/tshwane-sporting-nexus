@@ -1,5 +1,4 @@
 
-// Script to create initial admin user and sample data
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
@@ -10,25 +9,32 @@ import Gallery from './models/Gallery.js';
 
 dotenv.config();
 
-const createInitialData = async () => {
+const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to MongoDB');
+    console.log('✅ MongoDB Connected');
+  } catch (error) {
+    console.error('❌ MongoDB connection failed:', error);
+    process.exit(1);
+  }
+};
 
-    // Create admin user if doesn't exist
-    const adminExists = await User.findOne({ email: 'admin@tsfc.co.za' });
+const initializeData = async () => {
+  try {
+    // Create admin user if it doesn't exist
+    const adminExists = await User.findOne({ email: 'admin@tsfc.com' });
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const hashedPassword = await bcrypt.hash('admin123', 12);
       await User.create({
         name: 'Admin User',
-        email: 'admin@tsfc.co.za',
+        email: 'admin@tsfc.com',
         password: hashedPassword,
         role: 'admin'
       });
-      console.log('Admin user created');
+      console.log('✅ Admin user created');
     }
 
-    // Create sample players if collection is empty
+    // Add sample players if none exist
     const playerCount = await Player.countDocuments();
     if (playerCount === 0) {
       await Player.insertMany([
@@ -55,32 +61,33 @@ const createInitialData = async () => {
           imageUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
         }
       ]);
-      console.log('Sample players created');
+      console.log('✅ Sample players added');
     }
 
-    // Create sample coaches if collection is empty
+    // Add sample coaches if none exist
     const coachCount = await Coach.countDocuments();
     if (coachCount === 0) {
       await Coach.insertMany([
         {
-          name: 'James Peterson',
+          name: 'Michael Johnson',
           position: 'Head Coach',
           experience: 15,
           nationality: 'South Africa',
-          bio: 'Former professional player with extensive coaching experience.',
-          imageUrl: 'https://images.unsplash.com/photo-1553867745-6e038d085e86?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-          qualifications: ['UEFA Pro License', 'Sports Science Degree']
+          bio: 'Experienced coach with a passion for developing young talent.',
+          imageUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+          qualifications: ['CAF A License', 'UEFA B License']
         }
       ]);
-      console.log('Sample coaches created');
+      console.log('✅ Sample coaches added');
     }
 
-    console.log('Initial data setup complete');
+    console.log('🎉 Database initialization completed');
     process.exit(0);
   } catch (error) {
-    console.error('Error setting up initial data:', error);
+    console.error('❌ Error initializing data:', error);
     process.exit(1);
   }
 };
 
-createInitialData();
+// Connect to database and initialize data
+connectDB().then(initializeData);

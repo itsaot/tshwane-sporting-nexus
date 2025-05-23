@@ -17,6 +17,7 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log('API Request:', config.method?.toUpperCase(), config.url, config.data);
     return config;
   },
   (error) => Promise.reject(error)
@@ -24,8 +25,12 @@ api.interceptors.request.use(
 
 // Add a response interceptor for better error handling
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('API Response:', response.status, response.data);
+    return response;
+  },
   (error) => {
+    console.error('API Error:', error.response?.status, error.response?.data || error.message);
     if (error.response?.status === 401) {
       // Token expired or invalid
       localStorage.removeItem('token');
@@ -37,7 +42,7 @@ api.interceptors.response.use(
 );
 
 // Player API functions
-export const createPlayer = async (playerData) => {
+export const createPlayer = async (playerData: any) => {
   try {
     const response = await api.post('/players', playerData);
     return response.data;
@@ -48,7 +53,7 @@ export const createPlayer = async (playerData) => {
 };
 
 // Coach API functions
-export const createCoach = async (coachData) => {
+export const createCoach = async (coachData: any) => {
   try {
     const response = await api.post('/coaches', coachData);
     return response.data;
