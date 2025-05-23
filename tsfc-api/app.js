@@ -1,34 +1,50 @@
+
 // app.js
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
+import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-
 import connectDB from './config/db.js';
-import usersRouter from './routes/users.js';
-import playersRouter from './routes/players.js';
-import coachesRouter from './routes/coaches.js';
-import galleryRouter from './routes/gallery.js';
 
+// Import routes
+import authRoutes from './routes/auth.js';
+import playerRoutes from './routes/players.js';
+import coachRoutes from './routes/coaches.js';
+import galleryRoutes from './routes/gallery.js';
+import userRoutes from './routes/users.js';
 
 dotenv.config();
-connectDB();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Connect to MongoDB
+connectDB();
 
-app.use('/api/users', usersRouter);
-app.use('/api/players', playersRouter);
-app.use('/api/coaches', coachesRouter);
-app.use('/api/gallery', galleryRouter);
+// Middleware
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  credentials: true
+}));
+app.use(morgan('combined'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/players', playerRoutes);
+app.use('/api/coaches', coachRoutes);
+app.use('/api/gallery', galleryRoutes);
+app.use('/api/users', userRoutes);
+
+// Health check route
+app.get('/api/health', (req, res) => {
+  res.json({ message: 'TSFC API is running!' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
 
 export default app;
-// app.js
-// This code sets up an Express.js application that connects to a MongoDB database using Mongoose. It imports necessary modules, including dotenv for environment variable management, cors for handling cross-origin requests, and path for file path manipulation. The application uses middleware to parse JSON requests and serve static files from the 'uploads' directory.

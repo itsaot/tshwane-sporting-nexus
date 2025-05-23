@@ -22,60 +22,63 @@ export interface AuthResponse {
   }
 }
 
-// Mock admin credentials for development/testing
-const MOCK_USERS = {
-  'admin@tsfc.co.za': {
-    id: 'admin-001',
-    name: 'Admin User',
-    email: 'admin@tsfc.co.za',
-    password: 'admin123',
-    role: 'admin' as const
-  },
-  'user@tsfc.co.za': {
-    id: 'user-001',
-    name: 'Regular User',
-    email: 'user@tsfc.co.za',
-    password: 'user123',
-    role: 'user' as const
+export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
+  try {
+    const response = await api.post<AuthResponse>('/auth/login', credentials);
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+    }
+    return response.data;
+  } catch (error) {
+    // If API fails in development, try mock users
+    if (import.meta.env.DEV && axios.isAxiosError(error) && error.code === 'ECONNREFUSED') {
+      return handleMockLogin(credentials);
+    }
+    throw error;
   }
 };
 
-export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
-  // For development purposes, check against mock users first
-  // In production, this would be replaced with the actual API call
-  if (import.meta.env.DEV) {
-    const mockUser = MOCK_USERS[credentials.email as keyof typeof MOCK_USERS];
-    
-    if (mockUser && mockUser.password === credentials.password) {
-      // Create a mock token (in production this would come from the backend)
-      const mockResponse: AuthResponse = {
-        token: `mock-token-${mockUser.id}-${Date.now()}`,
-        user: {
-          id: mockUser.id,
-          name: mockUser.name,
-          email: mockUser.email,
-          role: mockUser.role
-        }
-      };
-      
-      // Store auth data in localStorage
-      localStorage.setItem('token', mockResponse.token);
-      localStorage.setItem('user', JSON.stringify(mockResponse.user));
-      
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      return mockResponse;
+// Mock login for development when backend is not available
+const handleMockLogin = async (credentials: LoginCredentials): Promise<AuthResponse> => {
+  const MOCK_USERS = {
+    'admin@tsfc.co.za': {
+      id: 'admin-001',
+      name: 'Admin User',
+      email: 'admin@tsfc.co.za',
+      password: 'admin123',
+      role: 'admin' as const
+    },
+    'user@tsfc.co.za': {
+      id: 'user-001',
+      name: 'Regular User',
+      email: 'user@tsfc.co.za',
+      password: 'user123',
+      role: 'user' as const
     }
-  }
+  };
 
-  // If not in dev mode or mock user not found/password incorrect, call the API
-  const response = await api.post<AuthResponse>('/auth/login', credentials);
-  if (response.data.token) {
-    localStorage.setItem('token', response.data.token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
+  const mockUser = MOCK_USERS[credentials.email as keyof typeof MOCK_USERS];
+  
+  if (mockUser && mockUser.password === credentials.password) {
+    const mockResponse: AuthResponse = {
+      token: `mock-token-${mockUser.id}-${Date.now()}`,
+      user: {
+        id: mockUser.id,
+        name: mockUser.name,
+        email: mockUser.email,
+        role: mockUser.role
+      }
+    };
+    
+    localStorage.setItem('token', mockResponse.token);
+    localStorage.setItem('user', JSON.stringify(mockResponse.user));
+    
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return mockResponse;
   }
-  return response.data;
+  
+  throw new Error('Invalid credentials');
 };
 
 export const register = async (credentials: RegisterCredentials): Promise<AuthResponse> => {
