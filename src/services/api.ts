@@ -36,4 +36,38 @@ api.interceptors.response.use(
   }
 );
 
+// Player API functions
+export const createPlayer = async (playerData) => {
+  try {
+    const response = await api.post('/players', playerData);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to create player:', error);
+    throw error;
+  }
+};
+
+// Coach API functions
+export const createCoach = async (coachData) => {
+  try {
+    const response = await api.post('/coaches', coachData);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to create coach:', error);
+    throw error;
+  }
+};
+
+// Gallery API functions
+export const fetchGallery = async () => {
+  try {
+    const response = await api.get('/gallery');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch gallery items:', error);
+    // Return empty array in case of error
+    return [];
+  }
+};
+
 export default api;

@@ -1,5 +1,6 @@
 
 import api from './api';
+import axios from 'axios';
 
 export interface LoginCredentials {
   email: string;
