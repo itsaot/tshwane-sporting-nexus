@@ -24,6 +24,10 @@ import { GalleryItem } from '../services/galleryService';
 import PlayerAdminList from '../components/admin/PlayerAdminList';
 import CoachAdminList from '../components/admin/CoachAdminList';
 import GalleryAdminList from '../components/admin/GalleryAdminList';
+// example: src/pages/AdminDashboard.tsx
+import CreatePlayerForm from "../components/CreatePlayerForm";
+import CreateCoachForm from "../components/CreateCoachForm";
+
 
 const AdminDashboard: React.FC = () => {
   return (
